@@ -8,7 +8,7 @@ public class ServerExample
     {
         ServerTransport transport = new TCPServerTransport(8080);
         Serializer serializer = new Cdr();
-        Server server = new Server(serializer, transport);
+        SingleServer server = new SingleServer(serializer, transport);
         Servant servant = new CalculatorServantExample();
         server.addService(servant);
         server.serve();

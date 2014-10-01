@@ -25,7 +25,7 @@ public class ClientExampleDFKI {
         int ret = 0;
 
         Context context = Kiara.createContext();
-        Connection connection = context.openConnection("tcp://127.0.0.1:8080");
+        Connection connection = context.openConnection("tcp://127.0.0.1:9090");
         Calculator proxy = connection.getServiceInterface(Calculator.class);
 
         try

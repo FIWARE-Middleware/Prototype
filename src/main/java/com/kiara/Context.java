@@ -28,4 +28,13 @@ public class Context {
             throw new IOException(e);
         }
     }
+
+    public Service newService() {
+        return new Service();
+    }
+
+    // Create server without negotiation
+    public Server newServer() {
+        return new Server();
+    }
 }

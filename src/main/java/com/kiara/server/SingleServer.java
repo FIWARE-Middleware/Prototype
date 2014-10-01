@@ -5,9 +5,9 @@ import com.kiara.transport.*;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-public class Server implements Listener
+public class SingleServer implements Listener
 {
-    public Server(Serializer ser, ServerTransport transport)
+    public SingleServer(Serializer ser, ServerTransport transport)
     {
         m_ser = ser;
         m_transport = transport;
