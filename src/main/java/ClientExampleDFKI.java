@@ -1,10 +1,19 @@
-import com.kiara.marshaling.*;
-import com.kiara.transport.*;
 
-public class ClientExample
-{
-    public static void main(String argv[]) throws Exception
-    {
+import com.kiara.Connection;
+import com.kiara.Context;
+import com.kiara.Kiara;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/**
+ *
+ * @author rubinste
+ */
+public class ClientExampleDFKI {
+    public static void main(String argv[]) throws Exception {
         if(argv.length != 2)
         {
             System.out.println("Usage: ClientExample <integer1> <integer2>");
@@ -15,10 +24,9 @@ public class ClientExample
         int param2 = Integer.parseInt(argv[1]);
         int ret = 0;
 
-        // Create custom transport, serializer and the proxy.
-        ProxyTransport transport = new TCPProxyTransport("127.0.0.1", 8080);
-        Serializer ser = new Cdr();
-        Calculator proxy = new CalculatorProxy(ser, transport);
+        Context context = Kiara.createContext();
+        Connection connection = context.openConnection("tcp://127.0.0.1:8080");
+        Calculator proxy = connection.getServiceInterface(Calculator.class);
 
         try
         {
@@ -36,4 +44,5 @@ public class ClientExample
             return;
         }
     }
+
 }

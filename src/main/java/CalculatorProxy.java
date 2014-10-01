@@ -2,7 +2,7 @@ import com.kiara.marshaling.*;
 import com.kiara.transport.*;
 import java.nio.ByteBuffer;
 
-class CalculatorProxy
+class CalculatorProxy implements Calculator
 {
     public CalculatorProxy(Serializer ser, ProxyTransport transport)
     {
@@ -10,7 +10,7 @@ class CalculatorProxy
         m_transport = transport;
     }
 
-    int add(int param1, int param2)
+    public int add(int param1, int param2)
     {
         if(m_ser != null && m_transport != null)
         {
@@ -35,7 +35,7 @@ class CalculatorProxy
         return 0;
     }
 
-    int subtract(int param1, int param2)
+    public int subtract(int param1, int param2)
     {
         if(m_ser != null && m_transport != null)
         {
