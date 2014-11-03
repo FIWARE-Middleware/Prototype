@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 
-public class TCPProxyTransport implements ProxyTransport
+public class TCPProxyTransport implements Transport
 {
     public TCPProxyTransport(String ip_address, int port) throws Exception
     {

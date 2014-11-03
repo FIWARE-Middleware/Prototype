@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 class CalculatorProxy implements Calculator
 {
-    public CalculatorProxy(Serializer ser, ProxyTransport transport)
+    public CalculatorProxy(Serializer ser, Transport transport)
     {
         m_ser = ser;
         m_transport = transport;
@@ -61,5 +61,5 @@ class CalculatorProxy implements Calculator
     }
 
     private Serializer m_ser = null;
-    private ProxyTransport m_transport = null;
+    private Transport m_transport = null;
 }

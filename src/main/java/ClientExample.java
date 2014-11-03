@@ -16,7 +16,7 @@ public class ClientExample
         int ret = 0;
 
         // Create custom transport, serializer and the proxy.
-        ProxyTransport transport = new TCPProxyTransport("127.0.0.1", 8080);
+        Transport transport = new TCPProxyTransport("127.0.0.1", 8080);
         Serializer ser = new Cdr();
         Calculator proxy = new CalculatorProxy(ser, transport);
 

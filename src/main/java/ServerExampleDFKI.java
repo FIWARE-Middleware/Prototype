@@ -3,7 +3,10 @@ import com.kiara.Context;
 import com.kiara.Kiara;
 import com.kiara.Server;
 import com.kiara.Service;
+import com.kiara.marshaling.Serializer;
 import com.kiara.server.Servant;
+import com.kiara.transport.ServerTransport;
+import com.kiara.transport.Transport;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,18 +21,22 @@ public class ServerExampleDFKI {
 
     public static void main(String argv[]) throws Exception {
         System.out.println("ServerExampleDFKI");
+
         Context context = Kiara.createContext();
-        Service service = context.newService();
+        Server server = context.createServer();
 
-        Servant servant = new CalculatorServantExample();
-        service.register(servant);
+        CalculatorServant calculator_impl = new CalculatorServantExample();
+        
+        ServerTransport transport = context.createServerTransport("tcp://0.0.0.0:8080");
+        Serializer serializer = context.createSerializer("cdr");
+        Service service = context.createService();
 
-        // Create server without negotiation
-        Server server = context.newServer();
+        service.register(calculator_impl);
 
         // Add service waiting on TCP with CDR serialization
-        server.addService("tcp://0.0.0.0:8080", "cdr", service);
-        server.addService("tcp://0.0.0.0:9090", "cdr", service);
+        server.addService(service, transport, serializer);
+        server.addService(service, "tcp://0.0.0.0:9090", "cdr");
+        
         server.run();
     }
 
