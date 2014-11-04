@@ -1,4 +1,3 @@
-
 import com.kiara.Context;
 import com.kiara.Kiara;
 import com.kiara.Server;
@@ -17,16 +16,16 @@ import com.kiara.transport.Transport;
  *
  * @author rubinste
  */
-public class ServerExampleDFKI {
+public class ServerExampleCommon {
 
     public static void main(String argv[]) throws Exception {
-        System.out.println("ServerExampleDFKI");
+        System.out.println("ServerExampleCommon");
 
         Context context = Kiara.createContext();
         Server server = context.createServer();
 
         CalculatorServant calculator_impl = new CalculatorServantExample();
-        
+
         ServerTransport transport = context.createServerTransport("tcp://0.0.0.0:8080");
         Serializer serializer = context.createSerializer("cdr");
         Service service = context.createService();
@@ -36,7 +35,7 @@ public class ServerExampleDFKI {
         // Add service waiting on TCP with CDR serialization
         server.addService(service, transport, serializer);
         server.addService(service, "tcp://0.0.0.0:9090", "cdr");
-        
+
         server.run();
     }
 
