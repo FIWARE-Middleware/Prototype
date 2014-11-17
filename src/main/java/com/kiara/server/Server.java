@@ -1,6 +1,5 @@
 package com.kiara.server;
 
-import com.kiara.server.Service;
 import com.kiara.serialization.Serializer;
 import com.kiara.transport.ServerTransport;
 import java.io.IOException;

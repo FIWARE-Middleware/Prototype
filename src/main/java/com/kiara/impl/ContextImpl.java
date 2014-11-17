@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.net.URI;
 
 public class ContextImpl implements Context {
-        public Connection connect(String url, String protocol) throws IOException {
+
+    public Connection connect(String url, String protocol) throws IOException {
         // We should perform here negotation, but for now only a fixed transport/protocol combination
         final Transport transport = createTransport(url);
         final Serializer serializer = createSerializer(protocol);
@@ -25,7 +26,7 @@ public class ContextImpl implements Context {
     public Connection connect(Transport transport, Serializer serializer) throws IOException {
         return new ConnectionImpl(transport, serializer);
     }
-    
+
     public Service createService() {
         return new ServiceImpl();
     }
@@ -36,11 +37,16 @@ public class ContextImpl implements Context {
     }
 
     public Transport createTransport(String url) throws IOException {
+        if (url == null) {
+            throw new NullPointerException(url);
+        }
+
         try {
             URI uri = new URI(url);
 
-            if (!uri.getScheme().equals("tcp"))
-                throw new IOException("Unsupported transport: "+uri.getScheme());
+            if (!"tcp".equals(uri.getScheme())) {
+                throw new IOException("Unsupported transport: " + uri.getScheme());
+            }
             return new TCPProxyTransport(uri.getHost(), uri.getPort());
         } catch (Exception ex) {
             throw new IOException(ex);
@@ -51,8 +57,9 @@ public class ContextImpl implements Context {
         try {
             URI uri = new URI(url);
 
-            if (!uri.getScheme().equals("tcp"))
-                throw new IOException("Unsupported transport: "+uri.getScheme());
+            if (!uri.getScheme().equals("tcp")) {
+                throw new IOException("Unsupported transport: " + uri.getScheme());
+            }
             return new TCPServerTransport(uri.getPort());
         } catch (Exception ex) {
             throw new IOException(ex);
@@ -60,8 +67,9 @@ public class ContextImpl implements Context {
     }
 
     public Serializer createSerializer(String name) throws IOException {
-        if (!"cdr".equals(name))
-            throw new IOException("Unsupported serializer: "+name);
+        if (!"cdr".equals(name)) {
+            throw new IOException("Unsupported serializer: " + name);
+        }
         return new Cdr();
     }
 
