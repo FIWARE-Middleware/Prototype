@@ -1,4 +1,4 @@
-package com.kiara;
+package com.kiara.server;
 
 import com.kiara.server.Servant;
 import java.util.List;

@@ -1,4 +1,6 @@
-import com.kiara.marshaling.*;
+import com.kiara.serialization.Serializer;
+import com.kiara.serialization.Cdr;
+import com.kiara.impl.SingleServer;
 import com.kiara.transport.*;
 import com.kiara.server.*;
 
@@ -14,4 +16,3 @@ public class ServerExample
         server.serve();
     }
 }
-

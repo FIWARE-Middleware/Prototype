@@ -1,4 +1,5 @@
-import com.kiara.marshaling.*;
+import com.kiara.serialization.Serializer;
+import com.kiara.serialization.Cdr;
 import com.kiara.transport.*;
 
 public class ClientExample

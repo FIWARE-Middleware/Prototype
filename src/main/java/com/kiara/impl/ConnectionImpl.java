@@ -1,7 +1,7 @@
 package com.kiara.impl;
 
-import com.kiara.Connection;
-import com.kiara.marshaling.Serializer;
+import com.kiara.client.Connection;
+import com.kiara.serialization.Serializer;
 import com.kiara.transport.Transport;
 import java.lang.reflect.Constructor;
 
@@ -23,7 +23,7 @@ public class ConnectionImpl implements Connection {
         return serializer;
     }
 
-    public <T> T createClient(Class<T> interfaceClass) throws Exception {
+    public <T> T getServiceProxy(Class<T> interfaceClass) throws Exception {
         String proxyClassName = interfaceClass.getName()+"Proxy";
         Class<?> proxyClass = Class.forName(proxyClassName);
         if (!interfaceClass.isAssignableFrom(proxyClass))

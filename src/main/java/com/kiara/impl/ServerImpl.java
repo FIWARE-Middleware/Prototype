@@ -1,11 +1,10 @@
 package com.kiara.impl;
 
 import com.kiara.Context;
-import com.kiara.Server;
-import com.kiara.Service;
-import com.kiara.marshaling.Serializer;
+import com.kiara.server.Server;
+import com.kiara.server.Service;
+import com.kiara.serialization.Serializer;
 import com.kiara.server.Servant;
-import com.kiara.server.SingleServer;
 import com.kiara.transport.ServerTransport;
 import java.io.IOException;
 import java.util.ArrayList;

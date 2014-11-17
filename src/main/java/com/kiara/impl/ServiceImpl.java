@@ -1,6 +1,6 @@
 package com.kiara.impl;
 
-import com.kiara.Service;
+import com.kiara.server.Service;
 import com.kiara.server.Servant;
 import java.util.ArrayList;
 import java.util.List;

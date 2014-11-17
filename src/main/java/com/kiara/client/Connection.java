@@ -1,6 +1,6 @@
-package com.kiara;
+package com.kiara.client;
 
-import com.kiara.marshaling.Serializer;
+import com.kiara.serialization.Serializer;
 import com.kiara.transport.Transport;
 
 public interface Connection {
@@ -8,6 +8,6 @@ public interface Connection {
 
     public Serializer getSerializer();
 
-    public <T> T createClient(Class<T> interfaceClass) throws Exception;
+    public <T> T getServiceProxy(Class<T> interfaceClass) throws Exception;
 
 }

@@ -1,6 +1,6 @@
 package com.kiara.server;
 
-import com.kiara.marshaling.Serializer;
+import com.kiara.serialization.Serializer;
 import java.nio.ByteBuffer;
 
 public interface Servant

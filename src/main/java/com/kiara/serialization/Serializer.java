@@ -1,4 +1,4 @@
-package com.kiara.marshaling;
+package com.kiara.serialization;
 
 import java.nio.ByteBuffer;
 

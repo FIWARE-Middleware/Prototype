@@ -1,14 +1,17 @@
 package com.kiara;
 
+import com.kiara.server.Server;
+import com.kiara.server.Service;
+import com.kiara.client.Connection;
 import java.io.IOException;
-import com.kiara.marshaling.Serializer;
+import com.kiara.serialization.Serializer;
 import com.kiara.transport.ServerTransport;
 import com.kiara.transport.Transport;
 
 public interface Context {
-    public Connection createConnection(String url, String protocol) throws IOException;
+    public Connection connect(String url, String protocol) throws IOException;
 
-    public Connection createConnection(Transport transport, Serializer serializer) throws IOException;
+    public Connection connect(Transport transport, Serializer serializer) throws IOException;
     
     public Service createService();
 

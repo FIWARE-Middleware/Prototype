@@ -1,7 +1,7 @@
-import com.kiara.Connection;
+import com.kiara.client.Connection;
 import com.kiara.Context;
 import com.kiara.Kiara;
-import com.kiara.marshaling.Serializer;
+import com.kiara.serialization.Serializer;
 import com.kiara.transport.Transport;
 
 public class ClientExampleCommon {
@@ -21,8 +21,8 @@ public class ClientExampleCommon {
         Transport transport = context.createTransport("tcp://127.0.0.1:9090");
         Serializer serializer = context.createSerializer("cdr");
 
-        Connection connection = context.createConnection(transport, serializer);
-        Calculator client = connection.createClient(Calculator.class);
+        Connection connection = context.connect(transport, serializer);
+        Calculator client = connection.getServiceProxy(Calculator.class);
 
         try {
             // Call 'add' method.

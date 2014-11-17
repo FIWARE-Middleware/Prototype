@@ -1,4 +1,4 @@
-import com.kiara.marshaling.Serializer;
+import com.kiara.serialization.Serializer;
 import com.kiara.server.Servant;
 import java.nio.ByteBuffer;
 

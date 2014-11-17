@@ -1,11 +1,11 @@
 package com.kiara.impl;
 
-import com.kiara.Connection;
+import com.kiara.client.Connection;
 import com.kiara.Context;
-import com.kiara.Server;
-import com.kiara.Service;
-import com.kiara.marshaling.Cdr;
-import com.kiara.marshaling.Serializer;
+import com.kiara.server.Server;
+import com.kiara.server.Service;
+import com.kiara.serialization.Cdr;
+import com.kiara.serialization.Serializer;
 import com.kiara.transport.ServerTransport;
 import com.kiara.transport.TCPProxyTransport;
 import com.kiara.transport.TCPServerTransport;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 
 public class ContextImpl implements Context {
-        public Connection createConnection(String url, String protocol) throws IOException {
+        public Connection connect(String url, String protocol) throws IOException {
         // We should perform here negotation, but for now only a fixed transport/protocol combination
         final Transport transport = createTransport(url);
         final Serializer serializer = createSerializer(protocol);
@@ -22,7 +22,7 @@ public class ContextImpl implements Context {
         return new ConnectionImpl(transport, serializer);
     }
 
-    public Connection createConnection(Transport transport, Serializer serializer) throws IOException {
+    public Connection connect(Transport transport, Serializer serializer) throws IOException {
         return new ConnectionImpl(transport, serializer);
     }
     
