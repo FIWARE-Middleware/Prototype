@@ -2,7 +2,7 @@ import com.kiara.serialization.Serializer;
 import com.kiara.transport.*;
 import java.nio.ByteBuffer;
 
-class CalculatorProxy implements Calculator
+class CalculatorProxy implements CalculatorClient
 {
     public CalculatorProxy(Serializer ser, Transport transport)
     {

@@ -3,9 +3,7 @@ import com.kiara.Kiara;
 import com.kiara.server.Server;
 import com.kiara.server.Service;
 import com.kiara.serialization.Serializer;
-import com.kiara.server.Servant;
 import com.kiara.transport.ServerTransport;
-import com.kiara.transport.Transport;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

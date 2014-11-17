@@ -24,7 +24,13 @@ public class ConnectionImpl implements Connection {
     }
 
     public <T> T getServiceProxy(Class<T> interfaceClass) throws Exception {
-        String proxyClassName = interfaceClass.getName()+"Proxy";
+        // name of the interface class can end with 'Async' or 'Client'
+        String interfaceName = interfaceClass.getName();
+        if (interfaceName.endsWith("Async"))
+            interfaceName = interfaceName.substring(0, interfaceName.length()-5);
+        else if (interfaceName.endsWith("Client"))
+            interfaceName = interfaceName.substring(0, interfaceName.length()-6);
+        final String proxyClassName = interfaceName+"Proxy";
         Class<?> proxyClass = Class.forName(proxyClassName);
         if (!interfaceClass.isAssignableFrom(proxyClass))
             throw new RuntimeException("Proxy class "+proxyClass+" does not implement interface "+interfaceClass);

@@ -22,7 +22,7 @@ public class ClientExampleCommon {
         Serializer serializer = context.createSerializer("cdr");
 
         Connection connection = context.connect(transport, serializer);
-        Calculator client = connection.getServiceProxy(Calculator.class);
+        CalculatorClient client = connection.getServiceProxy(CalculatorClient.class);
 
         try {
             // Call 'add' method.
