@@ -10,27 +10,6 @@ public class TCPServerTransport implements ServerTransport {
         m_socket = new ServerSocket(port);
     }
 
-    private static int littleEndianToInt(byte[] data) {
-        return (data[3]) << 24
-                | (data[2] & 0xff) << 16
-                | (data[1] & 0xff) << 8
-                | (data[0] & 0xff);
-    }
-
-    public final void readFully(InputStream in, byte b[], int off, int len) throws IOException {
-        if (len < 0) {
-            throw new IndexOutOfBoundsException();
-        }
-        int n = 0;
-        while (n < len) {
-            int count = in.read(b, off + n, len - n);
-            if (count < 0) {
-                throw new EOFException();
-            }
-            n += count;
-        }
-    }
-
     public void listen(Listener listener) {
         while (true) {
             try {
@@ -38,16 +17,14 @@ public class TCPServerTransport implements ServerTransport {
                 InputStream is = connectionSocket.getInputStream();
 
                 int length = 0;
-                int num;
                 byte[] bytes = new byte[4];
                 while (length == 0) {
-                    readFully(is, bytes, 0, 4);
-                    length = littleEndianToInt(bytes);
+                    Util.readFully(is, bytes, 0, 4);
+                    length = Util.littleEndianToInt(bytes);
                 }
 
                 bytes = new byte[length];
-                readFully(is, bytes, 0, length);
-                //num = is.read(bytes, 0, length);
+                Util.readFully(is, bytes, 0, length);
                 ByteBuffer buffer = ByteBuffer.wrap(bytes);
                 listener.accept_request(connectionSocket, buffer);
             } catch (EOFException ex) {
