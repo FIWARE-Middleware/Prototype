@@ -67,9 +67,9 @@ public class CalculatorTest {
         }
 
         @Override
-        protected String makeClientTransportUri(String transport, int port) {
+        protected String makeClientTransportUri(String transport, int port, String protocol) {
             if ("tcp".equals(transport))
-                return "tcp://0.0.0.0:"+port;
+                return "tcp://0.0.0.0:"+port+"/?serialization="+protocol;
             throw new IllegalArgumentException("Unknown transport "+transport);
         }
     }

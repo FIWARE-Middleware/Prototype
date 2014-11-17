@@ -27,7 +27,7 @@ public abstract class TestSetup<CLIENT_INTERFACE> {
         this.serverCtx = null;
     }
     
-    protected abstract String makeClientTransportUri(String transport, int port);
+    protected abstract String makeClientTransportUri(String transport, int port, String protocol);
 
     protected abstract String makeServerTransportUri(String transport, int port);
 
@@ -63,7 +63,7 @@ public abstract class TestSetup<CLIENT_INTERFACE> {
         clientCtx = Kiara.createContext();
 
         System.out.printf("Opening connection to %s with protocol %s...%n", transport, protocol);
-        Connection connection = clientCtx.connect(makeClientTransportUri(transport, port), protocol);
+        Connection connection = clientCtx.connect(makeClientTransportUri(transport, port, protocol));
 
         return createClient(connection);
     }

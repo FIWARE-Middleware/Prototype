@@ -10,17 +10,38 @@ import com.kiara.transport.ServerTransport;
 import com.kiara.transport.TCPProxyTransport;
 import com.kiara.transport.TCPServerTransport;
 import com.kiara.transport.Transport;
+import io.netty.handler.codec.http.QueryStringDecoder;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 public class ContextImpl implements Context {
 
-    public Connection connect(String url, String protocol) throws IOException {
-        // We should perform here negotation, but for now only a fixed transport/protocol combination
-        final Transport transport = createTransport(url);
-        final Serializer serializer = createSerializer(protocol);
+    public Connection connect(String url) throws IOException {
+        try {
+            URI uri = new URI(url);
+            QueryStringDecoder decoder = new QueryStringDecoder(uri);
 
-        return new ConnectionImpl(transport, serializer);
+            String serializerName = null;
+
+            List<String> parameters = decoder.parameters().get("serialization");
+            if (parameters != null && !parameters.isEmpty()) {
+                serializerName = parameters.get(0);
+            }
+
+            if (serializerName == null) {
+                throw new IllegalArgumentException("No serializer is specified as a part of the URI");
+            }
+
+            // We should perform here negotation, but for now only a fixed transport/protocol combination
+            final Transport transport = createTransport(url);
+            final Serializer serializer = createSerializer(serializerName);
+
+            return new ConnectionImpl(transport, serializer);
+        } catch (URISyntaxException ex) {
+            throw new IOException(ex);
+        }
     }
 
     public Connection connect(Transport transport, Serializer serializer) throws IOException {

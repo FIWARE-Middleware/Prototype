@@ -9,7 +9,7 @@ import com.kiara.transport.ServerTransport;
 import com.kiara.transport.Transport;
 
 public interface Context {
-    public Connection connect(String url, String protocol) throws IOException;
+    public Connection connect(String url) throws IOException;
 
     public Connection connect(Transport transport, Serializer serializer) throws IOException;
     
