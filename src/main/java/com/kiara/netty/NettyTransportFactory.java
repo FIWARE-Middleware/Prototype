@@ -20,6 +20,7 @@ package com.kiara.netty;
 
 import com.kiara.transport.impl.Global;
 import com.kiara.transport.impl.TransportConnectionListener;
+import com.kiara.transport.impl.TransportFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.EventLoopGroup;
 import io.netty.handler.ssl.SslContext;
@@ -33,7 +34,7 @@ import javax.net.ssl.SSLException;
  *
  * @author Dmitri Rubinstein <dmitri.rubinstein@dfki.de>
  */
-public abstract class NettyTransportFactory {
+public abstract class NettyTransportFactory implements TransportFactory {
 
     private static final boolean SSL = System.getProperty("ssl") != null;
 

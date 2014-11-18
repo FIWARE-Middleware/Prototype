@@ -10,13 +10,67 @@ import com.kiara.transport.ServerTransport;
 import com.kiara.transport.TCPProxyTransport;
 import com.kiara.transport.TCPServerTransport;
 import com.kiara.transport.Transport;
+import com.kiara.transport.impl.TransportFactory;
+import com.kiara.transport.tcp.TcpBlockTransportFactory;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContextImpl implements Context {
+
+    private static final Map<String, TransportFactory> transportFactories = new HashMap<String, TransportFactory>();
+
+    // FIXME this initialization is hardcoded
+    static {
+        registerTransportFactory(new TcpBlockTransportFactory(/*secure = */false));
+    }
+
+    public static TransportFactory getTransportFactoryByName(String transportName) {
+        synchronized (transportFactories) {
+            return transportFactories.get(transportName);
+        }
+    }
+
+    public static TransportFactory getTransportFactoryByURI(String uri) throws URISyntaxException {
+        return getTransportFactoryByURI(new URI(uri));
+    }
+
+    public static TransportFactory getTransportFactoryByURI(URI uri) {
+        final String scheme = uri.getScheme();
+        if (scheme == null) {
+            return null;
+        }
+        return getTransportFactoryByName(scheme);
+    }
+
+    public static void registerTransportFactory(String transportName, TransportFactory transportFactory) {
+        if (transportName == null) {
+            throw new NullPointerException("transportName");
+        }
+        if (transportFactory == null) {
+            throw new NullPointerException("transportFactory");
+        }
+        synchronized (transportFactories) {
+            transportFactories.put(transportName, transportFactory);
+        }
+    }
+
+    public static synchronized void registerTransportFactory(TransportFactory transportFactory) {
+        if (transportFactory == null) {
+            throw new NullPointerException("transportFactory");
+        }
+        final String transportName = transportFactory.getName();
+        if (transportName == null) {
+            throw new NullPointerException("transportName");
+        }
+        synchronized (transportFactories) {
+            transportFactories.put(transportName, transportFactory);
+        }
+    }
 
     public Connection connect(String url) throws IOException {
         try {
@@ -59,16 +113,23 @@ public class ContextImpl implements Context {
 
     public Transport createTransport(String url) throws IOException {
         if (url == null) {
-            throw new NullPointerException(url);
+            throw new NullPointerException("url");
         }
 
         try {
             URI uri = new URI(url);
 
-            if (!"tcp".equals(uri.getScheme())) {
-                throw new IOException("Unsupported transport: " + uri.getScheme());
+            final TransportFactory factory = getTransportFactoryByURI(uri);
+            if (factory == null) {
+                throw new IOException("Unsupported transport URI " + url);
             }
-            return new TCPProxyTransport(uri.getHost(), uri.getPort());
+            return factory.createTransport(url, null).get();
+            /*
+             if (!"tcp".equals(uri.getScheme())) {
+             throw new IOException("Unsupported transport: " + uri.getScheme());
+             }
+             return new TCPProxyTransport(uri.getHost(), uri.getPort());
+             */
         } catch (Exception ex) {
             throw new IOException(ex);
         }

@@ -52,35 +52,39 @@ public class TcpBlockTransportFactory extends NettyTransportFactory {
         this.secure = secure;
     }
 
+    @Override
     public String getName() {
-        return secure ? "tcp" : "tcps";
+        return secure ? "tcps" : "tcp";
     }
 
+    @Override
     public int getPriority() {
         return secure ? 9 : 10;
     }
 
+    @Override
     public boolean isSecureTransport() {
         return secure;
     }
 
-    public ListenableFuture<Transport> openConnection(String uri, Map<String, Object> settings) throws InvalidAddressException, IOException {
+    @Override
+    public ListenableFuture<Transport> createTransport(String uri, Map<String, Object> settings) throws InvalidAddressException, IOException {
         if (uri == null) {
             throw new NullPointerException("uri");
         }
         try {
-            return openConnection(new URI(uri), settings);
+            return createTransport(new URI(uri), settings);
         } catch (URISyntaxException ex) {
             throw new InvalidAddressException(ex);
         }
     }
 
-    public ListenableFuture<Transport> openConnection(URI uri, Map<String, Object> settings) throws IOException {
+    public ListenableFuture<Transport> createTransport(URI uri, Map<String, Object> settings) throws IOException {
         final ChannelFutureAndConnection cfc = connect(uri, settings);
         return new ListenableConstantFutureAdapter<Transport>(cfc.future, cfc.connection);
     }
 
-    public ChannelFutureAndConnection connect(URI uri, Map<String, Object> settings) throws IOException {
+    private ChannelFutureAndConnection connect(URI uri, Map<String, Object> settings) throws IOException {
         if (uri == null) {
             throw new NullPointerException("uri");
         }
