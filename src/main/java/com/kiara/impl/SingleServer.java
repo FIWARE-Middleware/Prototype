@@ -11,7 +11,7 @@ public class SingleServer implements Listener
     public SingleServer(Serializer ser, ServerTransport transport)
     {
         m_ser = ser;
-        m_transport = transport;
+        m_transport = (ServerTransportImpl)transport;
         m_servants = new HashMap<String, Servant>();
     }
 
@@ -51,6 +51,6 @@ public class SingleServer implements Listener
     }
 
     private Serializer m_ser = null;
-    private ServerTransport m_transport = null;
+    private ServerTransportImpl m_transport = null;
     HashMap<String, Servant> m_servants = null;
 }

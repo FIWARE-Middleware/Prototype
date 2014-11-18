@@ -4,12 +4,13 @@ import java.io.*;
 import java.net.*;
 import java.nio.ByteBuffer;
 
-public class TCPServerTransport implements ServerTransport {
+public class TCPServerTransport implements ServerTransportImpl {
 
     public TCPServerTransport(int port) throws Exception {
         m_socket = new ServerSocket(port);
     }
 
+    @Override
     public void listen(Listener listener) {
         while (true) {
             try {
@@ -34,6 +35,7 @@ public class TCPServerTransport implements ServerTransport {
         }
     }
 
+    @Override
     public boolean sendreply(Object endpoint, ByteBuffer buffer) {
         if (endpoint != null && endpoint instanceof Socket) {
             Socket connectionSocket = (Socket) endpoint;

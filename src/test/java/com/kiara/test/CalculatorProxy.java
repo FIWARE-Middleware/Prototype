@@ -9,7 +9,7 @@ class CalculatorProxy implements CalculatorClient
     public CalculatorProxy(Serializer ser, Transport transport)
     {
         m_ser = ser;
-        m_transport = transport;
+        m_transport = (TransportImpl)transport;
     }
 
     public int add(int param1, int param2)
@@ -63,5 +63,5 @@ class CalculatorProxy implements CalculatorClient
     }
 
     private Serializer m_ser = null;
-    private Transport m_transport = null;
+    private TransportImpl m_transport = null;
 }

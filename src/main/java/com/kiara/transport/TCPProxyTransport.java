@@ -4,7 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 
-public class TCPProxyTransport implements Transport {
+public class TCPProxyTransport implements TransportImpl {
 
     public TCPProxyTransport(String ip_address, int port) throws Exception {
         m_address = InetAddress.getByName(ip_address);
@@ -12,6 +12,7 @@ public class TCPProxyTransport implements Transport {
         m_socket = new Socket(m_address, m_port);
     }
 
+    @Override
     public boolean send(ByteBuffer buffer) {
         if (m_socket != null) {
             try {
@@ -43,6 +44,7 @@ public class TCPProxyTransport implements Transport {
         return false;
     }
 
+    @Override
     public ByteBuffer recv() {
         try {
             InputStream is = m_socket.getInputStream();
