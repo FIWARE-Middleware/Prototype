@@ -207,8 +207,10 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
                 currentListeners = listeners.toArray(new TransportMessageListener[listeners.size()]);
             }
         }
-        for (TransportMessageListener listener : currentListeners) {
-            listener.onMessage(message);
+        if (currentListeners != null) {
+            for (TransportMessageListener listener : currentListeners) {
+                listener.onMessage(message);
+            }
         }
     }
 
