@@ -19,6 +19,10 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class CalculatorTest {
 
+    static {
+        System.setProperty("java.util.logging.config.file", "/home/rubinste/.kiara/logging.properties");
+    }
+
     public static class CalculatorServantImpl extends CalculatorServant {
 
         public int add(int param1, int param2) {

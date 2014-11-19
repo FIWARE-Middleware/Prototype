@@ -59,6 +59,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
     private volatile String sessionId = null;
 
     private final TransportConnectionListener connectionListener;
+    private final boolean SEND_SESSION_ID = false;
 
     private final List<TransportMessageListener> listeners = new ArrayList<TransportMessageListener>();
 
@@ -126,7 +127,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
             case UNINITIALIZED:
             case WAIT_CONNECT:
                 state = State.CONNECTED;
-                if (mode == Mode.CLIENT) {
+                if (mode == Mode.CLIENT && SEND_SESSION_ID) {
                     // FIXME send sessionID
                     ctx.writeAndFlush(EMPTY_BUFFER);
                 }
@@ -167,7 +168,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
             logger.debug("RECEIVED CONTENT {}", new String(transportMessage.getPayload().array(), transportMessage.getPayload().arrayOffset(), transportMessage.getPayload().remaining()));
         }
 
-        if (mode == Mode.SERVER && sessionId == null) {
+        if (mode == Mode.SERVER && sessionId == null && SEND_SESSION_ID) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Set session ID to '{}'", Buffers.bufferToString(transportMessage.getPayload()));
             }
@@ -200,12 +201,14 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
     }
 
     private void notifyListeners(final TcpBlockMessage message) {
+        TransportMessageListener currentListeners[] = null;
         synchronized (listeners) {
             if (!listeners.isEmpty()) {
-                for (TransportMessageListener listener : listeners) {
-                    listener.onMessage(message);
-                }
+                currentListeners = listeners.toArray(new TransportMessageListener[listeners.size()]);
             }
+        }
+        for (TransportMessageListener listener : currentListeners) {
+            listener.onMessage(message);
         }
     }
 

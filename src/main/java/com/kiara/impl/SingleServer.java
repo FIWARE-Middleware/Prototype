@@ -28,12 +28,13 @@ public class SingleServer implements Listener
 
     public void accept_request(Object endpoint, ByteBuffer buffer)
     {
-        String service = m_ser.deserializeService(buffer);
+        final Object messageId = m_ser.deserializeMessageId(buffer);
+        final String service = m_ser.deserializeService(buffer);
         Servant servant = m_servants.get(service);
 
         if(servant != null)
         {
-            ByteBuffer reply = servant.process(m_ser, buffer);
+            ByteBuffer reply = servant.process(m_ser, buffer, messageId);
 
             if(reply != null)
             {

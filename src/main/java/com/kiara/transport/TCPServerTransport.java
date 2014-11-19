@@ -17,17 +17,19 @@ public class TCPServerTransport implements ServerTransportImpl {
                 Socket connectionSocket = m_socket.accept();
                 InputStream is = connectionSocket.getInputStream();
 
-                int length = 0;
-                byte[] bytes = new byte[4];
-                while (length == 0) {
-                    Util.readFully(is, bytes, 0, 4);
-                    length = Util.littleEndianToInt(bytes);
-                }
+                while (true) {
+                    int length = 0;
+                    byte[] bytes = new byte[4];
+                    while (length == 0) {
+                        Util.readFully(is, bytes, 0, 4);
+                        length = Util.littleEndianToInt(bytes);
+                    }
 
-                bytes = new byte[length];
-                Util.readFully(is, bytes, 0, length);
-                ByteBuffer buffer = ByteBuffer.wrap(bytes);
-                listener.accept_request(connectionSocket, buffer);
+                    bytes = new byte[length];
+                    Util.readFully(is, bytes, 0, length);
+                    ByteBuffer buffer = ByteBuffer.wrap(bytes);
+                    listener.accept_request(connectionSocket, buffer);
+                }
             } catch (EOFException ex) {
             } catch (Exception ex) {
                 System.out.println("ERROR<TCPServerTransport::listen>: " + ex);

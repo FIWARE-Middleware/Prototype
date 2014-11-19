@@ -11,9 +11,9 @@ public abstract class CalculatorServant implements Servant
         return "Calculator";
     }
 
-    public ByteBuffer process(Serializer ser, ByteBuffer buffer)
+    public ByteBuffer process(Serializer ser, ByteBuffer buffer, Object messageId)
     {
-        String operation = ser.deserializeOperation(buffer);
+        final String operation = ser.deserializeOperation(buffer);
 
         if(operation.equals("add"))
         {
@@ -24,6 +24,7 @@ public abstract class CalculatorServant implements Servant
             param2 = ser.deserializeInteger(buffer);
             int ret = add(param1, param2);
             ByteBuffer retBuffer = ByteBuffer.allocate(100);
+            ser.serializeMessageId(retBuffer, messageId);
             ser.serializeInteger(retBuffer, ret);
             return retBuffer;
         }
@@ -36,6 +37,7 @@ public abstract class CalculatorServant implements Servant
             param2 = ser.deserializeInteger(buffer);
             int ret = subtract(param1, param2);
             ByteBuffer retBuffer = ByteBuffer.allocate(100);
+            ser.serializeMessageId(retBuffer, messageId);
             ser.serializeInteger(retBuffer, ret);
             return retBuffer;
         }

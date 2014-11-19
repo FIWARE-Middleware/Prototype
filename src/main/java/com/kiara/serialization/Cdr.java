@@ -1,51 +1,85 @@
 package com.kiara.serialization;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Cdr implements Serializer
-{
-    public void serializeService(ByteBuffer buffer, String service)
-    {
+public class Cdr implements Serializer {
+
+    private final AtomicInteger nextId;
+
+    public Cdr() {
+        nextId = new AtomicInteger(1);
+    }
+
+    @Override
+    public Object getNewMessageId() {
+        return nextId.getAndIncrement();
+    }
+
+    @Override
+    public void serializeMessageId(ByteBuffer buffer, Object messageId) {
+        serializeInteger(buffer, (Integer)messageId);
+    }
+
+    @Override
+    public Object deserializeMessageId(ByteBuffer buffer) {
+        final int id = deserializeInteger(buffer);
+        return id;
+    }
+
+    @Override
+    public void serializeService(ByteBuffer buffer, String service) {
         this.serializeString(buffer, service);
     }
 
-    public String deserializeService(ByteBuffer buffer)
-    {
+    @Override
+    public String deserializeService(ByteBuffer buffer) {
         return this.deserializeString(buffer);
     }
 
-    public void serializeOperation(ByteBuffer buffer, String operation)
-    {
+    @Override
+    public void serializeOperation(ByteBuffer buffer, String operation) {
         this.serializeString(buffer, operation);
     }
 
-    public String deserializeOperation(ByteBuffer buffer)
-    {
+    @Override
+    public String deserializeOperation(ByteBuffer buffer) {
         return this.deserializeString(buffer);
     }
 
-    public void serializeString(ByteBuffer buffer, String data)
-    {
+    @Override
+    public void serializeString(ByteBuffer buffer, String data) {
         byte[] bytes = data.getBytes();
         this.serializeInteger(buffer, bytes.length);
         buffer.put(bytes);
     }
 
-    public String deserializeString(ByteBuffer buffer)
-    {
+    @Override
+    public String deserializeString(ByteBuffer buffer) {
         int length = this.deserializeInteger(buffer);
         byte[] bytes = new byte[length];
         buffer.get(bytes);
         return new String(bytes);
     }
 
-    public void serializeInteger(ByteBuffer buffer, int data)
-    {
+    @Override
+    public void serializeInteger(ByteBuffer buffer, int data) {
         buffer.putInt(data);
     }
 
-    public int deserializeInteger(ByteBuffer buffer)
-    {
+    @Override
+    public int deserializeInteger(ByteBuffer buffer) {
         return buffer.getInt();
+    }
+
+    @Override
+    public boolean equalMessageIds(Object id1, Object id2) {
+        if (id1 == id2) {
+            return true;
+        }
+        if (id1 == null || id2 == null) {
+            return false;
+        }
+        return id1.equals(id2);
     }
 }

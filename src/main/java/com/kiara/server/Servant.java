@@ -7,5 +7,5 @@ public interface Servant
 {
     public String getServiceName();
 
-    public ByteBuffer process(Serializer ser, ByteBuffer buffer);
+    public ByteBuffer process(Serializer ser, ByteBuffer buffer, Object messageId);
 }

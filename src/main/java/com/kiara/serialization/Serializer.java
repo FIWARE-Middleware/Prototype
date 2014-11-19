@@ -2,8 +2,14 @@ package com.kiara.serialization;
 
 import java.nio.ByteBuffer;
 
-public interface Serializer
-{
+public interface Serializer {
+
+    public Object getNewMessageId();
+
+    public void serializeMessageId(ByteBuffer buffer, Object messageId);
+
+    public Object deserializeMessageId(ByteBuffer buffer);
+
     public void serializeService(ByteBuffer buffer, String service);
 
     public String deserializeService(ByteBuffer buffer);
@@ -19,4 +25,6 @@ public interface Serializer
     public void serializeInteger(ByteBuffer buffer, int data);
 
     public int deserializeInteger(ByteBuffer buffer);
+
+    public boolean equalMessageIds(Object id1, Object id2);
 }
