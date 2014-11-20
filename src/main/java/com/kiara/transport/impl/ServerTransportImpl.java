@@ -17,27 +17,17 @@
  */
 package com.kiara.transport.impl;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import com.kiara.transport.ServerTransport;
-import com.kiara.transport.Transport;
-import java.io.IOException;
-import java.util.Map;
+import java.io.Closeable;
+import java.net.SocketAddress;
 
 /**
  *
  * @author Dmitri Rubinstein <dmitri.rubinstein@dfki.de>
  */
-public interface TransportFactory {
+public interface ServerTransportImpl extends ServerTransport, Closeable {
 
-    public String getName();
+    public SocketAddress getLocalSocketAddress();
 
-    public int getPriority();
-
-    public boolean isSecureTransport();
-
-    public ListenableFuture<Transport> createTransport(String uri, Map<String, Object> settings) throws InvalidAddressException, IOException;
-
-    public ServerTransport createServerTransport(String url) throws IOException;
-
-    public void startServer(ServerTransport serverTransport, TransportConnectionListener listener) throws InterruptedException;
+    public TransportFactory getTransportFactory();
 }

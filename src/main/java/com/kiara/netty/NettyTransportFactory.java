@@ -15,19 +15,30 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.kiara.netty;
 
+import com.kiara.transport.ServerTransport;
 import com.kiara.transport.impl.Global;
 import com.kiara.transport.impl.TransportConnectionListener;
 import com.kiara.transport.impl.TransportFactory;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Slf4JLoggerFactory;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.cert.CertificateException;
+import java.util.concurrent.ExecutionException;
 import javax.net.ssl.SSLException;
 
 /**
@@ -37,6 +48,8 @@ import javax.net.ssl.SSLException;
 public abstract class NettyTransportFactory implements TransportFactory {
 
     private static final boolean SSL = System.getProperty("ssl") != null;
+    private static final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    private static final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     static {
         InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
@@ -58,6 +71,62 @@ public abstract class NettyTransportFactory implements TransportFactory {
         }
     }
 
+    @Override
+    public ServerTransport createServerTransport(String url) throws IOException {
+        try {
+            final URI uri = new URI(url);
+            return new NettyServerTransport(new InetSocketAddress(uri.getHost(), uri.getPort()), uri.getPath(), this);
+        } catch (URISyntaxException ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    @Override
+    public void startServer(ServerTransport serverTransport, TransportConnectionListener listener) throws InterruptedException {
+        if (serverTransport == null) {
+            throw new NullPointerException("serverTransport");
+        }
+        if (listener == null) {
+            throw new NullPointerException("listener");
+        }
+        if (!(serverTransport instanceof NettyServerTransport)) {
+            throw new IllegalArgumentException("serverTransport is not of type NettyServerTransport, but " + serverTransport.getClass().getName());
+        }
+
+        final NettyServerTransport st = (NettyServerTransport) serverTransport;
+
+        ServerBootstrap b = new ServerBootstrap();
+        b.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .handler(new LoggingHandler(LogLevel.INFO))
+                .childHandler(createServerChildHandler(st.getPath(), listener));
+
+        final Channel channel = b.bind(st.getLocalSocketAddress()).sync().channel();
+        st.setChannel(channel);
+        st.setListener(listener);
+    }
+
     public abstract ChannelHandler createServerChildHandler(String path, TransportConnectionListener connectionListener);
+
+    public static void shutdown() {
+        try {
+            if (!workerGroup.isShutdown()) {
+                workerGroup.shutdownGracefully().get();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (!bossGroup.isShutdown()) {
+                bossGroup.shutdownGracefully().get();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

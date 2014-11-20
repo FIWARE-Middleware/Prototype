@@ -7,7 +7,6 @@ import com.kiara.server.Service;
 import com.kiara.serialization.Cdr;
 import com.kiara.serialization.Serializer;
 import com.kiara.transport.ServerTransport;
-import com.kiara.transport.TCPProxyTransport;
 import com.kiara.transport.TCPServerTransport;
 import com.kiara.transport.Transport;
 import com.kiara.transport.impl.TransportFactory;
