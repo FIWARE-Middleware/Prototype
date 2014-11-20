@@ -18,6 +18,7 @@
 
 package com.kiara.transport.impl;
 
+import com.kiara.transport.ServerTransport;
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -26,6 +27,6 @@ import java.io.IOException;
  * @author Dmitri Rubinstein <dmitri.rubinstein@dfki.de>
  */
 public interface TransportServer extends Closeable {
-    public void listen(ServerTransportImpl serverTransport, TransportConnectionListener listener);
+    public void listen(ServerTransport serverTransport, TransportConnectionListener listener);
     public void run() throws IOException;
 }

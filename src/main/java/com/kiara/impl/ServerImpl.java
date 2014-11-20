@@ -6,35 +6,49 @@ import com.kiara.server.Service;
 import com.kiara.serialization.Serializer;
 import com.kiara.server.Servant;
 import com.kiara.transport.ServerTransport;
+import com.kiara.transport.impl.TransportServer;
+import com.kiara.transport.impl.TransportServerImpl;
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.net.ssl.SSLException;
 
 public class ServerImpl implements Server {
 
     private final Context context;
+    private final TransportServer transportServer;
     private final List<Service> services;
-    private final List<SingleServer> singleServers;
+    private final List<ServantDispatcher> servantDispatchers;
     private final ExecutorService pool;
 
     public ServerImpl(Context context) {
         this.context = context;
-        services = new ArrayList<Service>();
-        singleServers = new ArrayList<SingleServer>();
-        pool = Executors.newCachedThreadPool();
+        try {
+            this.transportServer = new TransportServerImpl();
+            services = new ArrayList<Service>();
+            servantDispatchers = new ArrayList<ServantDispatcher>();
+            pool = Executors.newCachedThreadPool();
+        } catch (CertificateException ex) {
+            throw new RuntimeException(ex);
+        } catch (SSLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public void addService(Service service, ServerTransport serverTransport, Serializer serializer) throws IOException {
         services.add(service);
-        SingleServer srv = new SingleServer(serializer, serverTransport);
+
+        ServantDispatcher srv = new ServantDispatcher(serializer, serverTransport);
 
         for (Servant servant : service.getGeneratedServants()) {
             srv.addService(servant);
         }
 
-        singleServers.add(srv);
+        servantDispatchers.add(srv);
+        transportServer.listen(serverTransport, srv);
     }
 
     public void addService(Service service, String path, String protocol) throws IOException {
@@ -46,12 +60,10 @@ public class ServerImpl implements Server {
     }
 
     public void run() {
-        for (final SingleServer srv : singleServers) {
-            pool.execute(new Runnable() {
-                public void run() {
-                    srv.serve();
-                }
-            });
+        try {
+            transportServer.run();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

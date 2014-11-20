@@ -7,7 +7,6 @@ import com.kiara.server.Service;
 import com.kiara.serialization.Cdr;
 import com.kiara.serialization.Serializer;
 import com.kiara.transport.ServerTransport;
-import com.kiara.transport.TCPServerTransport;
 import com.kiara.transport.Transport;
 import com.kiara.transport.impl.TransportFactory;
 import com.kiara.transport.tcp.TcpBlockTransportFactory;
@@ -123,12 +122,6 @@ public class ContextImpl implements Context {
                 throw new IOException("Unsupported transport URI " + url);
             }
             return factory.createTransport(url, null).get();
-            /*
-             if (!"tcp".equals(uri.getScheme())) {
-             throw new IOException("Unsupported transport: " + uri.getScheme());
-             }
-             return new TCPProxyTransport(uri.getHost(), uri.getPort());
-             */
         } catch (Exception ex) {
             throw new IOException(ex);
         }
@@ -138,10 +131,12 @@ public class ContextImpl implements Context {
         try {
             URI uri = new URI(url);
 
-            if (!uri.getScheme().equals("tcp")) {
-                throw new IOException("Unsupported transport: " + uri.getScheme());
+            final TransportFactory factory = getTransportFactoryByURI(uri);
+            if (factory == null) {
+                throw new IOException("Unsupported transport URI " + url);
             }
-            return new TCPServerTransport(uri.getPort());
+            return factory.createServerTransport(url);
+
         } catch (Exception ex) {
             throw new IOException(ex);
         }

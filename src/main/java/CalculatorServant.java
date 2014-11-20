@@ -24,6 +24,7 @@ public abstract class CalculatorServant implements Servant
             ByteBuffer retBuffer = ByteBuffer.allocate(100);
             ser.serializeMessageId(retBuffer, messageId);
             ser.serializeInteger(retBuffer, ret);
+            retBuffer.flip();
             return retBuffer;
         }
         else if(operation.equals("subtract"))
@@ -37,6 +38,7 @@ public abstract class CalculatorServant implements Servant
             ByteBuffer retBuffer = ByteBuffer.allocate(100);
             ser.serializeMessageId(retBuffer, messageId);
             ser.serializeInteger(retBuffer, ret);
+            retBuffer.flip();
             return retBuffer;
         }
 

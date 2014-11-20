@@ -23,7 +23,6 @@ import com.kiara.netty.ChannelFutureAndConnection;
 import com.kiara.transport.impl.InvalidAddressException;
 import com.kiara.netty.ListenableConstantFutureAdapter;
 import com.kiara.netty.NettyTransportFactory;
-import com.kiara.transport.ServerTransport;
 import com.kiara.transport.impl.TransportConnectionListener;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelHandler;

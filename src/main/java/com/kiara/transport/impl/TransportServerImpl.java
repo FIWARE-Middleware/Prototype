@@ -18,6 +18,7 @@
 package com.kiara.transport.impl;
 
 import com.kiara.netty.NettyTransportFactory;
+import com.kiara.transport.ServerTransport;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -59,12 +60,15 @@ public class TransportServerImpl implements TransportServer, RunningService {
     }
 
     @Override
-    public void listen(ServerTransportImpl serverTransport, TransportConnectionListener listener) {
-        if (!(serverTransport.getTransportFactory() instanceof NettyTransportFactory)) {
+    public void listen(ServerTransport serverTransport, TransportConnectionListener listener) {
+        if (!(serverTransport instanceof ServerTransportImpl))
+            throw new IllegalArgumentException("transport factory is not an instance of " + ServerTransportImpl.class.getName() + " class");
+        final ServerTransportImpl st = (ServerTransportImpl)serverTransport;
+        if (!(st.getTransportFactory() instanceof NettyTransportFactory)) {
             throw new IllegalArgumentException("transport factory is not an instance of " + NettyTransportFactory.class.getName() + " class");
         }
         synchronized (serverEntries) {
-            serverEntries.add(new ServerEntry(serverTransport, listener));
+            serverEntries.add(new ServerEntry(st, listener));
         }
     }
 
