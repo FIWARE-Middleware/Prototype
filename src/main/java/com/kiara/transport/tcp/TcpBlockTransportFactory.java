@@ -23,7 +23,7 @@ import com.kiara.netty.ChannelFutureAndConnection;
 import com.kiara.transport.impl.InvalidAddressException;
 import com.kiara.netty.ListenableConstantFutureAdapter;
 import com.kiara.netty.NettyTransportFactory;
-import com.kiara.transport.impl.TransportConnectionListener;
+import com.kiara.transport.impl.TransportListener;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -124,7 +124,7 @@ public class TcpBlockTransportFactory extends NettyTransportFactory {
     }
 
     @Override
-    public ChannelHandler createServerChildHandler(String path, TransportConnectionListener connectionHandler) {
+    public ChannelHandler createServerChildHandler(String path, TransportListener connectionHandler) {
         try {
             return new TcpServerInitializer(this, createServerSslContext(), path, connectionHandler);
         } catch (CertificateException ex) {

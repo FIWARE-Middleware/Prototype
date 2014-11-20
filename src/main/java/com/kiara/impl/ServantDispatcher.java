@@ -21,7 +21,7 @@ import com.kiara.serialization.Serializer;
 import com.kiara.server.Servant;
 import com.kiara.transport.ServerTransport;
 import com.kiara.transport.impl.ServerTransportImpl;
-import com.kiara.transport.impl.TransportConnectionListener;
+import com.kiara.transport.impl.TransportListener;
 import com.kiara.transport.impl.TransportImpl;
 import com.kiara.transport.impl.TransportMessage;
 import com.kiara.transport.impl.TransportMessageListener;
@@ -32,7 +32,7 @@ import java.util.HashMap;
  *
  * @author Dmitri Rubinstein <dmitri.rubinstein@dfki.de>
  */
-public class ServantDispatcher implements TransportConnectionListener, TransportMessageListener {
+public class ServantDispatcher implements TransportListener, TransportMessageListener {
 
     public ServantDispatcher(Serializer ser, ServerTransport transport) {
         m_ser = ser;

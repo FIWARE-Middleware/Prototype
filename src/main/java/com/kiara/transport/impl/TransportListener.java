@@ -21,7 +21,7 @@ package com.kiara.transport.impl;
  *
  * @author Dmitri Rubinstein <dmitri.rubinstein@dfki.de>
  */
-public interface TransportConnectionListener {
+public interface TransportListener {
     public void onConnectionOpened(TransportImpl connection);
     public void onConnectionClosed(TransportImpl connection);
 }

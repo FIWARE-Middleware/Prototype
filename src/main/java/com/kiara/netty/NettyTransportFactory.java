@@ -19,7 +19,7 @@ package com.kiara.netty;
 
 import com.kiara.transport.ServerTransport;
 import com.kiara.transport.impl.Global;
-import com.kiara.transport.impl.TransportConnectionListener;
+import com.kiara.transport.impl.TransportListener;
 import com.kiara.transport.impl.TransportFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -82,7 +82,7 @@ public abstract class NettyTransportFactory implements TransportFactory {
     }
 
     @Override
-    public void startServer(ServerTransport serverTransport, TransportConnectionListener listener) throws InterruptedException {
+    public void startServer(ServerTransport serverTransport, TransportListener listener) throws InterruptedException {
         if (serverTransport == null) {
             throw new NullPointerException("serverTransport");
         }
@@ -106,7 +106,7 @@ public abstract class NettyTransportFactory implements TransportFactory {
         st.setListener(listener);
     }
 
-    public abstract ChannelHandler createServerChildHandler(String path, TransportConnectionListener connectionListener);
+    public abstract ChannelHandler createServerChildHandler(String path, TransportListener connectionListener);
 
     public static void shutdown() {
         try {

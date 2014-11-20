@@ -20,7 +20,7 @@ package com.kiara.transport.tcp;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.kiara.netty.ListenableConstantFutureAdapter;
 import com.kiara.netty.NettyTransportFactory;
-import com.kiara.transport.impl.TransportConnectionListener;
+import com.kiara.transport.impl.TransportListener;
 import com.kiara.transport.impl.TransportImpl;
 import com.kiara.transport.impl.TransportMessage;
 import com.kiara.transport.impl.TransportMessageListener;
@@ -58,7 +58,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
     private volatile Channel channel = null;
     private volatile String sessionId = null;
 
-    private final TransportConnectionListener connectionListener;
+    private final TransportListener connectionListener;
     private final boolean SEND_SESSION_ID = false;
 
     private final List<TransportMessageListener> listeners = new ArrayList<TransportMessageListener>();
@@ -101,7 +101,7 @@ public class TcpHandler extends SimpleChannelInboundHandler<Object> implements T
         this.bout = new NoCopyByteArrayOutputStream(1024);
     }
 
-    public TcpHandler(NettyTransportFactory transportFactory, String path, TransportConnectionListener connectionListener) {
+    public TcpHandler(NettyTransportFactory transportFactory, String path, TransportListener connectionListener) {
         if (transportFactory == null) {
             throw new NullPointerException("transportFactory");
         }
