@@ -37,9 +37,9 @@ public class TransportServerImpl implements TransportServer, RunningService {
     private static class ServerEntry {
 
         public final ServerTransportImpl serverTransport;
-        public final TransportListener listener;
+        public final TransportConnectionListener listener;
 
-        public ServerEntry(ServerTransportImpl serverTransport, TransportListener listener) {
+        public ServerEntry(ServerTransportImpl serverTransport, TransportConnectionListener listener) {
             this.serverTransport = serverTransport;
             this.listener = listener;
         }
@@ -60,7 +60,7 @@ public class TransportServerImpl implements TransportServer, RunningService {
     }
 
     @Override
-    public void listen(ServerTransport serverTransport, TransportListener listener) {
+    public void listen(ServerTransport serverTransport, TransportConnectionListener listener) {
         if (!(serverTransport instanceof ServerTransportImpl))
             throw new IllegalArgumentException("transport factory is not an instance of " + ServerTransportImpl.class.getName() + " class");
         final ServerTransportImpl st = (ServerTransportImpl)serverTransport;

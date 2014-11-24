@@ -17,11 +17,8 @@
  */
 package com.kiara.netty;
 
-import com.kiara.transport.impl.TransportFactory;
-import com.kiara.transport.impl.TransportImpl;
-import com.kiara.transport.impl.TransportListener;
-import com.kiara.transport.impl.TransportMessage;
-import com.kiara.transport.impl.TransportMessageListener;
+import com.kiara.transport.impl.*;
+import com.kiara.transport.impl.TransportConnectionListener;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -44,10 +41,10 @@ public abstract class BaseHandler<I, T extends TransportFactory> extends SimpleC
 
     private static final Logger logger = LoggerFactory.getLogger(BaseHandler.class);
 
-    protected final T transportFactory;
+    private final T transportFactory;
     protected volatile Channel channel = null;
-    protected TransportListener connectionListener;
-    protected final List<TransportMessageListener> listeners = new ArrayList<TransportMessageListener>();
+    private TransportConnectionListener connectionListener;
+    private final List<TransportMessageListener> listeners = new ArrayList<TransportMessageListener>();
 
     public static enum Mode {
 
@@ -66,7 +63,7 @@ public abstract class BaseHandler<I, T extends TransportFactory> extends SimpleC
     }
     protected State state;
 
-    protected BaseHandler(Mode mode, State state, T transportFactory, TransportListener connectionListener) {
+    protected BaseHandler(Mode mode, State state, T transportFactory, TransportConnectionListener connectionListener) {
         this.mode = mode;
         this.state = state;
         this.connectionListener = connectionListener;
@@ -97,11 +94,11 @@ public abstract class BaseHandler<I, T extends TransportFactory> extends SimpleC
         }
     }
 
-    public TransportListener getConnectionListener() {
+    public TransportConnectionListener getConnectionListener() {
         return connectionListener;
     }
 
-    public void setConnectionListener(TransportListener connectionListener) {
+    public void setConnectionListener(TransportConnectionListener connectionListener) {
         this.connectionListener = connectionListener;
     }
 

@@ -27,7 +27,7 @@ public class ContextImpl implements Context {
         registerTransportFactory(new TcpBlockTransportFactory(/*secure = */false));
     }
 
-    public static TransportFactory getTransportFactoryByName(String transportName) {
+    private static TransportFactory getTransportFactoryByName(String transportName) {
         synchronized (transportFactories) {
             return transportFactories.get(transportName);
         }
@@ -37,7 +37,7 @@ public class ContextImpl implements Context {
         return getTransportFactoryByURI(new URI(uri));
     }
 
-    public static TransportFactory getTransportFactoryByURI(URI uri) {
+    private static TransportFactory getTransportFactoryByURI(URI uri) {
         final String scheme = uri.getScheme();
         if (scheme == null) {
             return null;
@@ -57,7 +57,7 @@ public class ContextImpl implements Context {
         }
     }
 
-    public static synchronized void registerTransportFactory(TransportFactory transportFactory) {
+    private static synchronized void registerTransportFactory(TransportFactory transportFactory) {
         if (transportFactory == null) {
             throw new NullPointerException("transportFactory");
         }

@@ -34,7 +34,6 @@ public class ClientExampleCommon {
             System.out.println("Result of subtracting: " + ret);
         } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());
-            return;
         }
     }
 

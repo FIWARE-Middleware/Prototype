@@ -39,5 +39,5 @@ public interface TransportFactory {
 
     public ServerTransport createServerTransport(String url) throws IOException;
 
-    public void startServer(ServerTransport serverTransport, TransportListener listener) throws InterruptedException;
+    public void startServer(ServerTransport serverTransport, TransportConnectionListener listener) throws InterruptedException;
 }

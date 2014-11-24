@@ -20,10 +20,9 @@ package com.kiara.transport.tcp;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.kiara.netty.BaseHandler;
 import com.kiara.netty.ListenableConstantFutureAdapter;
-import com.kiara.transport.impl.TransportListener;
+import com.kiara.transport.impl.TransportConnectionListener;
 import com.kiara.transport.impl.TransportMessage;
 import com.kiara.util.Buffers;
-import com.kiara.util.NoCopyByteArrayOutputStream;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import java.net.URI;
@@ -43,7 +42,7 @@ public class TcpHandler extends BaseHandler<Object, TcpBlockTransportFactory> {
     private volatile String sessionId = null;
     private final boolean SEND_SESSION_ID = false;
 
-    public TcpHandler(TcpBlockTransportFactory transportFactory, URI uri, TransportListener connectionListener) {
+    public TcpHandler(TcpBlockTransportFactory transportFactory, URI uri, TransportConnectionListener connectionListener) {
         super(Mode.CLIENT, State.UNINITIALIZED, transportFactory, connectionListener);
         if (transportFactory == null) {
             throw new NullPointerException("transportFactory");
@@ -54,7 +53,7 @@ public class TcpHandler extends BaseHandler<Object, TcpBlockTransportFactory> {
         this.uri = uri;
     }
 
-    public TcpHandler(TcpBlockTransportFactory transportFactory, String path, TransportListener connectionListener) {
+    public TcpHandler(TcpBlockTransportFactory transportFactory, String path, TransportConnectionListener connectionListener) {
         super(Mode.SERVER, State.UNINITIALIZED, transportFactory, connectionListener);
         if (transportFactory == null) {
             throw new NullPointerException("transportFactory");

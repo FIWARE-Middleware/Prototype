@@ -22,7 +22,6 @@ public class ServerImpl implements Server {
     private final TransportServer transportServer;
     private final List<Service> services;
     private final List<ServantDispatcher> servantDispatchers;
-    private final ExecutorService pool;
 
     public ServerImpl(Context context) {
         this.context = context;
@@ -30,7 +29,6 @@ public class ServerImpl implements Server {
             this.transportServer = new TransportServerImpl();
             services = new ArrayList<Service>();
             servantDispatchers = new ArrayList<ServantDispatcher>();
-            pool = Executors.newCachedThreadPool();
         } catch (CertificateException ex) {
             throw new RuntimeException(ex);
         } catch (SSLException ex) {

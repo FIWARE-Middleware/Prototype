@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public abstract class TestSetup<CLIENT_INTERFACE> {
-    protected final int port;
-    protected final String transport;
-    protected final String protocol;
-    protected final String configPath;
-    protected volatile Server server;
-    protected Context clientCtx;
-    protected Context serverCtx;
+abstract class TestSetup<CLIENT_INTERFACE> {
+    private final int port;
+    private final String transport;
+    private final String protocol;
+    private final String configPath;
+    private volatile Server server;
+    private Context clientCtx;
+    private Context serverCtx;
 
     public TestSetup(int port, String transport, String protocol, String configPath) {
         this.port = port;

@@ -18,7 +18,7 @@
 package com.kiara.netty;
 
 import com.kiara.transport.impl.ServerTransportImpl;
-import com.kiara.transport.impl.TransportListener;
+import com.kiara.transport.impl.TransportConnectionListener;
 import com.kiara.transport.impl.TransportFactory;
 import io.netty.channel.Channel;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class NettyServerTransport implements ServerTransportImpl {
     private final SocketAddress localSocketAddress;
     private final NettyTransportFactory transportFactory;
     private Channel channel;
-    private TransportListener listener;
+    private TransportConnectionListener listener;
 
     public NettyServerTransport(SocketAddress endpoint, String path, NettyTransportFactory transportFactory) {
         this.localSocketAddress = endpoint;
@@ -62,11 +62,11 @@ public class NettyServerTransport implements ServerTransportImpl {
         return channel;
     }
 
-    public void setListener(TransportListener listener) {
+    public void setListener(TransportConnectionListener listener) {
         this.listener = listener;
     }
 
-    public TransportListener getListener() {
+    public TransportConnectionListener getListener() {
         return listener;
     }
 

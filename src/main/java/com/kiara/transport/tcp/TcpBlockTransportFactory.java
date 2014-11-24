@@ -22,8 +22,8 @@ import com.google.common.util.concurrent.SettableFuture;
 import com.kiara.transport.Transport;
 import com.kiara.transport.impl.InvalidAddressException;
 import com.kiara.netty.NettyTransportFactory;
+import com.kiara.transport.impl.TransportConnectionListener;
 import com.kiara.transport.impl.TransportImpl;
-import com.kiara.transport.impl.TransportListener;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -42,8 +42,8 @@ import javax.net.ssl.SSLException;
  */
 public class TcpBlockTransportFactory extends NettyTransportFactory {
 
-    public static final int DEFAULT_TCP_PORT = 1111;
-    public static final int DEFAULT_TCPS_PORT = 1112;
+    private static final int DEFAULT_TCP_PORT = 1111;
+    private static final int DEFAULT_TCPS_PORT = 1112;
 
     private final boolean secure;
 
@@ -111,7 +111,7 @@ public class TcpBlockTransportFactory extends NettyTransportFactory {
         // Configure the client.
         final SettableFuture<Transport> onConnectionActive = SettableFuture.create();
         final TcpHandler clientHandler = new TcpHandler(this, uri, null);
-        clientHandler.setConnectionListener(new TransportListener() {
+        clientHandler.setConnectionListener(new TransportConnectionListener() {
 
             @Override
             public void onConnectionOpened(TransportImpl connection) {
@@ -135,7 +135,7 @@ public class TcpBlockTransportFactory extends NettyTransportFactory {
     }
 
     @Override
-    public ChannelHandler createServerChildHandler(String path, TransportListener connectionHandler) {
+    public ChannelHandler createServerChildHandler(String path, TransportConnectionListener connectionHandler) {
         try {
             return new TcpServerInitializer(this, createServerSslContext(), path, connectionHandler);
         } catch (CertificateException ex) {
