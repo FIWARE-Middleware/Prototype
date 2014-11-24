@@ -35,6 +35,7 @@ public class ClientExampleCommon {
         } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());
         }
+        Kiara.shutdown();
     }
 
 }

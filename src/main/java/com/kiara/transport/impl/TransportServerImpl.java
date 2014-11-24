@@ -17,6 +17,7 @@
  */
 package com.kiara.transport.impl;
 
+import com.kiara.RunningService;
 import com.kiara.netty.NettyTransportFactory;
 import com.kiara.transport.ServerTransport;
 
@@ -100,7 +101,7 @@ public class TransportServerImpl implements TransportServer, RunningService {
     }
 
     @Override
-    public void shutdownGracefully() {
+    public void shutdownService() {
         try {
             close();
         } catch (IOException ex) {

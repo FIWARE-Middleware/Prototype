@@ -16,12 +16,12 @@
  * License along with this library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kiara.transport.impl;
+package com.kiara;
 
 /**
  *
  * @author Dmitri Rubinstein <dmitri.rubinstein@dfki.de>
  */
 public interface RunningService {
-    public void shutdownGracefully();
+    public void shutdownService();
 }

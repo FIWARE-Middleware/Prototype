@@ -17,6 +17,8 @@
  */
 package com.kiara.netty;
 
+import com.kiara.Kiara;
+import com.kiara.RunningService;
 import com.kiara.transport.ServerTransport;
 import com.kiara.transport.impl.Global;
 import com.kiara.transport.impl.TransportConnectionListener;
@@ -53,6 +55,30 @@ public abstract class NettyTransportFactory implements TransportFactory {
 
     static {
         InternalLoggerFactory.setDefaultFactory(new Slf4JLoggerFactory());
+        Kiara.addRunningService(new RunningService() {
+
+            public void shutdownService() {
+                try {
+                    if (!workerGroup.isShutdown()) {
+                        workerGroup.shutdownGracefully().get();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (!bossGroup.isShutdown()) {
+                        bossGroup.shutdownGracefully().get();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     public NettyTransportFactory() {
@@ -107,26 +133,5 @@ public abstract class NettyTransportFactory implements TransportFactory {
     }
 
     protected abstract ChannelHandler createServerChildHandler(String path, TransportConnectionListener connectionListener);
-
-    public static void shutdown() {
-        try {
-            if (!workerGroup.isShutdown()) {
-                workerGroup.shutdownGracefully().get();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (!bossGroup.isShutdown()) {
-                bossGroup.shutdownGracefully().get();
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
