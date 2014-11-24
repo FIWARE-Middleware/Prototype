@@ -47,4 +47,6 @@ public interface TransportImpl extends Transport, Closeable {
 
     public boolean removeMessageListener(TransportMessageListener listener);
 
+    public boolean isOpen();
+
 }

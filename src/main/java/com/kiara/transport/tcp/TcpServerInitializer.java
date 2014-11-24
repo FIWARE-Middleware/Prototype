@@ -35,12 +35,12 @@ import java.nio.ByteOrder;
 
 public class TcpServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final NettyTransportFactory transportFactory;
+    private final TcpBlockTransportFactory transportFactory;
     private final SslContext sslCtx;
     private final TransportListener connectionListener;
     private final String path;
 
-    public TcpServerInitializer(NettyTransportFactory transportFactory, SslContext sslCtx, String path, TransportListener connectionListener) {
+    public TcpServerInitializer(TcpBlockTransportFactory transportFactory, SslContext sslCtx, String path, TransportListener connectionListener) {
         this.transportFactory = transportFactory;
         this.sslCtx = sslCtx;
         this.path = path;

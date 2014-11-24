@@ -18,16 +18,15 @@
 package com.kiara.transport.tcp;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.SettableFuture;
 import com.kiara.transport.Transport;
-import com.kiara.netty.ChannelFutureAndConnection;
 import com.kiara.transport.impl.InvalidAddressException;
-import com.kiara.netty.ListenableConstantFutureAdapter;
 import com.kiara.netty.NettyTransportFactory;
+import com.kiara.transport.impl.TransportImpl;
 import com.kiara.transport.impl.TransportListener;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import java.io.IOException;
@@ -79,12 +78,7 @@ public class TcpBlockTransportFactory extends NettyTransportFactory {
         }
     }
 
-    public ListenableFuture<Transport> createTransport(URI uri, Map<String, Object> settings) throws IOException {
-        final ChannelFutureAndConnection cfc = connect(uri, settings);
-        return new ListenableConstantFutureAdapter<Transport>(cfc.future, cfc.connection);
-    }
-
-    private ChannelFutureAndConnection connect(URI uri, Map<String, Object> settings) throws IOException {
+    private ListenableFuture<Transport> createTransport(URI uri, Map<String, Object> settings) throws IOException {
         if (uri == null) {
             throw new NullPointerException("uri");
         }
@@ -115,12 +109,29 @@ public class TcpBlockTransportFactory extends NettyTransportFactory {
         }
 
         // Configure the client.
-        final TcpHandler tcpClientHandler = new TcpHandler(this, uri, HttpMethod.POST);
+        final SettableFuture<Transport> onConnectionActive = SettableFuture.create();
+        final TcpHandler clientHandler = new TcpHandler(this, uri, null);
+        clientHandler.setConnectionListener(new TransportListener() {
+
+            @Override
+            public void onConnectionOpened(TransportImpl connection) {
+                clientHandler.setConnectionListener(null);
+                onConnectionActive.set(connection);
+            }
+
+            @Override
+            public void onConnectionClosed(TransportImpl connection) {
+
+            }
+        });
+
         Bootstrap b = new Bootstrap();
         b.group(getEventLoopGroup())
                 .channel(NioSocketChannel.class)
-                .handler(new TcpClientInitializer(sslCtx, tcpClientHandler));
-        return new ChannelFutureAndConnection(b.connect(host, port), tcpClientHandler);
+                .handler(new TcpClientInitializer(sslCtx, clientHandler));
+        b.connect(host, port);
+
+        return onConnectionActive;
     }
 
     @Override
